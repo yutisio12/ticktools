@@ -1,0 +1,44 @@
+# Vendor & Composer
+/vendor/
+
+# NPM / Node
+/node_modules/
+npm-debug.log
+yarn-error.log
+
+# Environment & secrets
+.env
+.env.backup
+.env.production
+.env.*.local
+.env.local
+
+# Laravel compiled & cache
+/bootstrap/cache/*.php
+/bootstrap/ssr/
+/storage/framework/cache/
+/storage/framework/sessions/
+/storage/framework/views/
+/storage/logs/
+
+# Compiled assets
+/public/build/
+/public/hot
+/public/storage
+
+# Deployment
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
+
+# IDE & OS
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
