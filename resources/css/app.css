@@ -1,11 +1,70 @@
-@import 'tailwindcss';
-
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+@import "tailwindcss";
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --color-primary-50: #eff6ff;
+    --color-primary-100: #dbeafe;
+    --color-primary-200: #bfdbfe;
+    --color-primary-300: #93c5fd;
+    --color-primary-400: #60a5fa;
+    --color-primary-500: #3b82f6;
+    --color-primary-600: #2563eb;
+    --color-primary-700: #1d4ed8;
+    --color-primary-800: #1e40af;
+    --color-primary-900: #1e3a5f; /* Deep Blue from plan */
+    --color-primary-950: #172554;
+    
+    --color-accent-400: #22d3ee;
+    --color-accent-500: #06b6d4; /* Cyan accent */
+    --color-accent-600: #0891b2;
+    
+    --color-slate-800: #1e293b;
+    --color-slate-900: #0f172a; /* Dark background */
+    --color-slate-950: #020617;
+}
+
+@layer base {
+    body {
+        @apply bg-slate-900 text-slate-200 antialiased font-sans;
+    }
+}
+
+@layer components {
+    .btn-primary {
+        @apply bg-primary-600 hover:bg-primary-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2;
+    }
+    
+    .btn-secondary {
+        @apply bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 border border-slate-600 hover:border-slate-500 flex items-center justify-center gap-2;
+    }
+    
+    .glass-card {
+        @apply bg-slate-800/80 backdrop-blur-md border border-slate-700/50 rounded-xl shadow-xl;
+    }
+    
+    .input-field {
+        @apply w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-200 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition-all duration-200;
+    }
+    
+    .label-text {
+        @apply block text-sm font-medium text-slate-400 mb-1.5;
+    }
+}
+
+/* Custom Scrollbar for dark theme */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0f172a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #475569;
 }

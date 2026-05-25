@@ -7,6 +7,9 @@ use App\Enums\Priority;
 use App\Enums\TicketStatus;
 use App\Models\Ticket;
 use App\Models\TicketHistory;
+use App\Models\User;
+use App\Services\SlaService;
+use App\Services\TicketWeightService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -36,6 +39,13 @@ class TicketService
 
             $this->logHistory($ticket, 'created', null, null, null, 'Ticket created');
 
+            // Send notifications to IT Staff and IT Leads
+            $itUsers = User::whereHas('role', function($q) {
+                $q->whereIn('slug', ['it-staff', 'it-lead', 'admin']);
+            })->where('is_active', true)->get();
+            
+            \Illuminate\Support\Facades\Notification::send($itUsers, new \App\Notifications\TicketCreatedNotification($ticket));
+
             return $ticket;
         });
     }
@@ -53,8 +63,16 @@ class TicketService
                 'status' => TicketStatus::Assigned,
             ]);
 
+            /** @var \App\Models\User $user */
+            $user = Auth::user();
+
             $this->logHistory($ticket, 'claimed', 'status', $oldStatus->value, TicketStatus::Assigned->value);
-            $this->logHistory($ticket, 'assigned', 'assigned_to', null, Auth::user()->name);
+            $this->logHistory($ticket, 'assigned', 'assigned_to', null, $user->name);
+
+            // Notify user that ticket is assigned
+            $ticket->user->notify(new \App\Notifications\TicketUpdatedNotification($ticket, 'assigned to ' . $user->name));
+            // Notify the assignee
+            $user->notify(new \App\Notifications\TicketAssignedNotification($ticket));
 
             return $ticket->fresh();
         });
@@ -130,6 +148,9 @@ class TicketService
             }
 
             $this->logHistory($ticket, 'status_changed', 'status', $oldStatus->value, $newStatus->value);
+            
+            // Notify user
+            $ticket->user->notify(new \App\Notifications\TicketUpdatedNotification($ticket, "updated to {$newStatus->label()}"));
 
             return $ticket->fresh();
         });
@@ -158,6 +179,12 @@ class TicketService
 
             $this->logHistory($ticket, 'submitted_for_review', 'status', $oldStatus->value, TicketStatus::PendingReview->value);
 
+            // Notify IT Leads
+            $itLeads = User::whereHas('role', function($q) {
+                $q->whereIn('slug', ['it-lead', 'admin']);
+            })->where('is_active', true)->get();
+            \Illuminate\Support\Facades\Notification::send($itLeads, new \App\Notifications\TicketUpdatedNotification($ticket, 'submitted for review'));
+
             return $ticket->fresh();
         });
     }
@@ -179,6 +206,12 @@ class TicketService
 
             $this->logHistory($ticket, 'approved', 'status', $oldStatus->value, TicketStatus::Closed->value, $notes);
 
+            // Notify User and Assignee
+            $ticket->user->notify(new \App\Notifications\TicketUpdatedNotification($ticket, 'approved and closed'));
+            if ($ticket->assignee) {
+                $ticket->assignee->notify(new \App\Notifications\TicketUpdatedNotification($ticket, 'approved and closed'));
+            }
+
             return $ticket->fresh();
         });
     }
@@ -199,6 +232,11 @@ class TicketService
             ]);
 
             $this->logHistory($ticket, 'returned', 'status', $oldStatus->value, TicketStatus::Returned->value, $notes);
+
+            // Notify Assignee
+            if ($ticket->assignee) {
+                $ticket->assignee->notify(new \App\Notifications\TicketUpdatedNotification($ticket, 'returned for revision'));
+            }
 
             return $ticket->fresh();
         });
@@ -226,6 +264,16 @@ class TicketService
             ]);
 
             $this->logHistory($ticket, 'reopened', 'status', $oldStatus->value, TicketStatus::Open->value, $reason);
+
+            // Notify Assignee if exists, else IT Staff
+            if ($ticket->assignee) {
+                $ticket->assignee->notify(new \App\Notifications\TicketUpdatedNotification($ticket, 'reopened by user'));
+            } else {
+                $itUsers = User::whereHas('role', function($q) {
+                    $q->whereIn('slug', ['it-staff', 'it-lead', 'admin']);
+                })->where('is_active', true)->get();
+                \Illuminate\Support\Facades\Notification::send($itUsers, new \App\Notifications\TicketUpdatedNotification($ticket, 'reopened by user'));
+            }
 
             return $ticket->fresh();
         });

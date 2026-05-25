@@ -24,6 +24,7 @@ class TicketController extends Controller
 
     public function index(Request $request)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         $query = Ticket::with(['user', 'assignee', 'category']);
@@ -109,6 +110,7 @@ class TicketController extends Controller
 
     public function show(Ticket $ticket)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         // Authorization check
@@ -126,6 +128,7 @@ class TicketController extends Controller
 
     public function claim(Ticket $ticket)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         if (!$user->isItStaff() && !$user->isItLead() && !$user->isAdmin()) {
@@ -213,6 +216,7 @@ class TicketController extends Controller
 
     public function approve(Request $request, Ticket $ticket)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         if (!$user->isItLead() && !$user->isAdmin()) {
             abort(403);
@@ -229,6 +233,7 @@ class TicketController extends Controller
             'review_notes' => 'required|string',
         ]);
 
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         if (!$user->isItLead() && !$user->isAdmin()) {
             abort(403);
