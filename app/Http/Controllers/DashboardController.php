@@ -80,11 +80,11 @@ class DashboardController extends Controller
         $endOfMonth = $now->copy()->endOfMonth();
 
         // Team KPI
-        $teamMembers = User::whereHas('role', fn($q) => $q->whereIn('slug', ['it-staff', 'it-lead']))
+        $teamMembers = User::whereHas('role', fn ($q) => $q->whereIn('slug', ['it-staff', 'it-lead']))
             ->withCount([
-                'assignedTickets as tickets_completed' => fn($q) => $q->where('status', TicketStatus::Closed)->whereBetween('closed_at', [$startOfMonth, $endOfMonth]),
-                'assignedTickets as tickets_active' => fn($q) => $q->whereNotIn('status', [TicketStatus::Closed]),
-                'assignedTickets as tickets_overdue' => fn($q) => $q->where('is_sla_breached', true)->whereNotIn('status', [TicketStatus::Closed]),
+                'assignedTickets as tickets_completed' => fn ($q) => $q->where('status', TicketStatus::Closed)->whereBetween('closed_at', [$startOfMonth, $endOfMonth]),
+                'assignedTickets as tickets_active' => fn ($q) => $q->whereNotIn('status', [TicketStatus::Closed]),
+                'assignedTickets as tickets_overdue' => fn ($q) => $q->where('is_sla_breached', true)->whereNotIn('status', [TicketStatus::Closed]),
             ])
             ->get();
 
@@ -121,8 +121,8 @@ class DashboardController extends Controller
 
         // Monthly ticket trend (last 6 months)
         $monthlyTrend = Ticket::select(
-            DB::raw('MONTH(created_at) as month'),
-            DB::raw('YEAR(created_at) as year'),
+            DB::raw('EXTRACT(MONTH FROM created_at) as month'),
+            DB::raw('EXTRACT(YEAR FROM created_at) as year'),
             DB::raw('COUNT(*) as total')
         )
             ->where('created_at', '>=', now()->subMonths(6))
