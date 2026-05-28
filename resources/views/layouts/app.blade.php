@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="@yield('htmlClass', 'dark')">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -71,15 +71,27 @@
                         </li>
                         <!-- Add admin links here when created -->
                         <li>
-                            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-slate-400 hover:bg-slate-800 hover:text-slate-200">
+                            <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors {{ request()->routeIs('admin.users.*') ? 'bg-primary-900/50 text-primary-300' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200' }}">
                                 <i data-lucide="users" class="w-5 h-5"></i>
                                 <span class="font-medium">Users & Roles</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-slate-400 hover:bg-slate-800 hover:text-slate-200">
+                            <a href="{{ route('admin.categories.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors {{ request()->routeIs('admin.categories.*') ? 'bg-primary-900/50 text-primary-300' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200' }}">
+                                <i data-lucide="layers" class="w-5 h-5"></i>
+                                <span class="font-medium">Categories</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.assets.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors {{ request()->routeIs('admin.assets.*') ? 'bg-primary-900/50 text-primary-300' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200' }}">
                                 <i data-lucide="monitor" class="w-5 h-5"></i>
                                 <span class="font-medium">Assets</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.sla.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors {{ request()->routeIs('admin.sla.*') ? 'bg-primary-900/50 text-primary-300' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200' }}">
+                                <i data-lucide="clock" class="w-5 h-5"></i>
+                                <span class="font-medium">SLA Config</span>
                             </a>
                         </li>
                     @endif
