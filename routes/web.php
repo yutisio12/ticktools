@@ -45,6 +45,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/tickets/{ticket}/return', [TicketController::class, 'returnTicket'])->name('tickets.return');
     });
 
+    // Admin Routes
+    Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->except(['create', 'show', 'edit']);
+        Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class)->except(['create', 'show', 'edit']);
+        Route::resource('assets', \App\Http\Controllers\Admin\AssetController::class)->except(['create', 'show', 'edit']);
+        Route::resource('sla', \App\Http\Controllers\Admin\SlaConfigController::class)->except(['create', 'show', 'edit', 'update']);
+    });
+
     // User Routes
     Route::post('/tickets/{ticket}/reopen', [TicketController::class, 'reopen'])->name('tickets.reopen');
 });
