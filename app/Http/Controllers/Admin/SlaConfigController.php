@@ -24,8 +24,7 @@ class SlaConfigController extends Controller
         $request->validate([
             'category_id' => 'required|exists:categories,id',
             'priority' => 'required|string',
-            'resolve_within_minutes' => 'required|integer|min:1',
-            'response_within_minutes' => 'nullable|integer|min:1',
+            'resolution_hours' => 'required|integer|min:1',
         ]);
 
         // Check if config already exists
@@ -37,14 +36,14 @@ class SlaConfigController extends Controller
             return back()->with('error', 'SLA Config for this category and priority already exists.');
         }
 
-        SlaConfig::create($request->all());
+        SlaConfig::create($request->only(['category_id', 'priority', 'resolution_hours']));
 
         return back()->with('success', 'SLA Config created successfully.');
     }
 
-    public function destroy(SlaConfig $slaConfig)
+    public function destroy(SlaConfig $sla)
     {
-        $slaConfig->delete();
+        $sla->delete();
         return back()->with('success', 'SLA Config deleted successfully.');
     }
 }
