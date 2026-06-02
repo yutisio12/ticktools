@@ -15,6 +15,7 @@ class SlaConfig extends Model
     ];
 
     protected $casts = [
+        'priority' => \App\Enums\Priority::class,
         'resolution_hours' => 'integer',
         'is_active' => 'boolean',
     ];
