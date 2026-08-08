@@ -44,7 +44,7 @@ class UserController extends Controller
 
         User::create($data);
 
-        return back()->with('success', 'User created successfully.');
+        return back()->with('success', 'User created successfully!');
     }
 
     public function update(Request $request, User $user)
@@ -68,10 +68,10 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         if ($user->id === auth()->id()) {
-            return back()->with('error', 'Cannot delete yourself.');
+            return back()->with('error', 'Cannot delete yourself!');
         }
         
         $user->delete();
-        return back()->with('success', 'User deleted successfully.');
+        return back()->with('success', 'User deleted successfully!');
     }
 }
