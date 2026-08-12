@@ -61,6 +61,7 @@ class DashboardController extends Controller
         $stats = [
             'available' => Ticket::where('status', TicketStatus::Open)->count(),
             'my_active' => Ticket::where('assigned_to', $user->id)->whereNotIn('status', [TicketStatus::Closed])->count(),
+            'my_open' => Ticket::where('assigned_to', $user->id)->where('status', [TicketStatus::Open])->count(),
             'my_completed' => Ticket::where('assigned_to', $user->id)->where('status', TicketStatus::Closed)->count(),
             'my_overdue' => Ticket::where('assigned_to', $user->id)->where('is_sla_breached', true)->whereNotIn('status', [TicketStatus::Closed])->count(),
         ];
