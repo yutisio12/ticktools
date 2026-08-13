@@ -21,6 +21,7 @@ class CategorySeeder extends Seeder
                     'Software Installation',
                     'Hardware Request',
                     'Information Request',
+                    'Internet Access',
                     'Other Request',
                 ],
             ],
