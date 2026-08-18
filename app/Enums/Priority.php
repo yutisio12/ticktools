@@ -4,10 +4,10 @@ namespace App\Enums;
 
 enum Priority: string
 {
-    case Low = 'low';
-    case Medium = 'medium';
-    case High = 'high';
-    case Critical = 'critical';
+    case Low = 'P4';
+    case Medium = 'P3';
+    case High = 'P2';
+    case Critical = 'P1';
 
     public function label(): string
     {
