@@ -33,7 +33,7 @@ class LoginController extends Controller
             ->first();
 
         if (!$user) {
-            return back()->withErrors(['badge_id' => 'Invalid Badge ID or Date of Birth.'])->withInput();
+            return back()->withErrors(['badge_id' => 'Invalid Credential!'])->withInput();
         }
 
         Auth::login($user, $request->boolean('remember'));
