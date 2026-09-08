@@ -105,7 +105,7 @@ class TicketController extends Controller
         }
 
         return redirect()->route('tickets.show', $ticket)
-            ->with('success', 'Ticket created successfully! Number: ' . $ticket->ticket_number);
+            ->with('success', 'Ticket created successfully with Number: ' . $ticket->ticket_number);
     }
 
     public function show(Ticket $ticket)
