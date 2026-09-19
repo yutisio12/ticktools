@@ -55,7 +55,7 @@ class TicketController extends Controller
 
         // Sorting
         $sortBy = $request->get('sort', 'created_at');
-        $sortDir = $request->get('direction', 'desc');
+        $sortDir = $request->get('direction', 'asc');
         $query->orderBy($sortBy, $sortDir);
 
         $tickets = $query->paginate(15);
