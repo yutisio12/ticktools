@@ -134,7 +134,7 @@ class DashboardController extends Controller
 
         $recentTickets = Ticket::with(['user', 'assignee', 'category'])
             ->orderBy('created_at', 'desc')
-            ->limit(10)
+            ->limit(15)
             ->get();
 
         return view('dashboard.admin', compact('stats', 'monthlyTrend', 'recentTickets'));
